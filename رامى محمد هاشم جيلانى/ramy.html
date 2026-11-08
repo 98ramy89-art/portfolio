@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   
+    <script>
+        class Student {
+  constructor(id, name, grades, attendance) {
+    this.id = id;
+    this.name = name;
+    this.grades = grades;
+    this.attendance = attendance;
+  }
+
+  calcAverage() {
+    const sum = this.grades.reduce((total, grade) => total + grade, 0);
+    return sum / this.grades.length;
+  }
+
+  getGradeLetter(avg) {
+    if (avg >= 90) return 'A';
+    if (avg >= 80) return 'B';
+    if (avg >= 70) return 'C';
+    if (avg >= 60) return 'D';
+    if (avg >= 50) return 'E';
+    return 'F';
+  }
+
+  getStatus() {
+    const avg = this.calcAverage();
+    if (avg >= 50 && this.attendance >= 75) {
+      return 'ناجح';
+    }
+    return 'يحتاج مراجعة';
+  }
+}
+
+// قائمة الطلاب
+const studentsList = [
+  new Student(101, 'رامى محمد', [85, 90, 88], 90),
+  new Student(102, 'سارة علي', [42, 45, 48], 80),
+  new Student(103, 'محمد حسن', [38, 40, 44], 70),
+  new Student(104, 'مريم خالد', [60, 65, 70], 85)
+];
+
+// لجنة الرأفة
+const strugglingStudents = studentsList.filter(student => {
+  const avg = student.calcAverage();
+  return avg >= 40 && avg <= 49;
+});
+
+const updatedAverages = strugglingStudents.map(student => {
+  return student.calcAverage() + 5;
+});
+
+const totalStrugglingAvg = updatedAverages.reduce((sum, avg) => sum + avg, 0);
+
+const strugglingAvgFinal = updatedAverages.length > 0 
+  ? totalStrugglingAvg / updatedAverages.length 
+  : 0;
+
+// طباعة التقرير الرئيسي
+console.log('--- تقرير نتائج الطلاب ---');
+studentsList.forEach(student => {
+  const avg = student.calcAverage();
+  const letter = student.getGradeLetter(avg);
+  const status = student.getStatus();
+
+  console.log(`الاسم: ${student.name} | المتوسط: ${avg.toFixed(2)} | التقدير: ${letter} | النتيجة: ${status}`);
+});
+
+// طباعة نتائج لجنة الرأفة
+console.log('\n--- نتائج لجنة الرأفة ---');
+console.log('المتوسطات المعدلة للطلاب المتعثرين:', updatedAverages);
+console.log('المتوسط العام للمتعثرين بعد الرأفة:', strugglingAvgFinal.toFixed(2));
+    </script>
+</body>
+</html>
